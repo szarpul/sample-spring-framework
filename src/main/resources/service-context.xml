@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="message-provider-context.xml"/>
+
+    <!--################# C NAMESPACE ################-->
+    <bean id="messageService"
+          class="com.szarpcode.samples.spring.beans.MessageService"
+          c:version="4.3.4">
+
+        <property name="messageProducer">
+            <ref bean="compositeMessageProducer"/>
+        </property>
+    </bean>
+
+    <!--################# LIFECYCLE INTERFACE ################-->
+    <bean class="com.szarpcode.samples.spring.lifecycle.LifecycleBean"/>
+
+</beans>

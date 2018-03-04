@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-init-method="init"><!-- **** DEFAULT INIT METHOD **** -->
+
+
+    <bean id="compositeMessageProducer"
+          class="com.szarpcode.samples.spring.beans.CompositeMessageProducer">
+        <property name="messageProducers">
+            <list>
+                <ref bean="helloMessageProducer"/>
+                <ref bean="welcomeMessageProducer"/>
+                <ref bean="lazyMessageProducer"/>
+                <ref bean="propsMessageProducer"/>
+                <ref bean="methodInjectionMessageProducer"/>
+                <ref bean="methodInjectionMessageProducer"/>
+            </list>
+        </property>
+    </bean>
+
+    <!--################# P NAMESPACE ################-->
+    <bean id="helloMessageProducer"
+          class="com.szarpcode.samples.spring.beans.HelloMessageProducer"
+          p:name="mate"
+          destroy-method="onDestroy"
+          init-method="customInit"><!-- **** INIT METHOD **** -->
+    </bean>
+
+    <!--################# FACTORY METHOD ################-->
+    <bean id="welcomeMessageProducer"
+          class="com.szarpcode.samples.spring.beans.WelcomeMessageProducer"
+          factory-method="create"/>
+
+    <!--################# LAZY INIT ################-->
+    <bean id="lazyMessageProducer"
+          class="com.szarpcode.samples.spring.beans.LazyInitMessageProducer"
+          lazy-init="true"/>
+
+    <!--################# PROPERTIES MERGE ################-->
+    <bean id="genericPropsMessageProducer"
+          class="com.szarpcode.samples.spring.beans.PropsMessageProducer">
+
+        <property name="properties">
+            <props>
+                <prop key="ke1">g_value1</prop>
+                <prop key="ke2">g_value2</prop>
+                <prop key="ke3">g_value3</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="propsMessageProducer" parent="genericPropsMessageProducer">
+        <property name="properties">
+            <props merge="true">
+                <prop key="ke3">value3</prop>
+                <prop key="ke4">value4</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--################ METHOD INJECTION ###############-->
+
+    <bean id="randomStringMessageProducer"
+          scope="prototype"
+          class="com.szarpcode.samples.spring.beans.RandomStringMessageProducer">
+
+    </bean>
+
+    <bean id="methodInjectionMessageProducer"
+          class="com.szarpcode.samples.spring.beans.MethodInjectionMessageProducer"
+          scope="singleton">
+
+        <lookup-method name="createMessageProducer" bean="randomStringMessageProducer"/>
+
+    </bean>
+
+</beans>
